@@ -42,7 +42,7 @@ def signinPage(request):
 
 def logoutUser(request):
   logout(request)
-  return redirect('signin') 
+  return redirect('home') 
 
 def home(request): 
   q =  request.GET.get('q') if request.GET.get('q') != None else ''
