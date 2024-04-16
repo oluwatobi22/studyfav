@@ -1,3 +1,5 @@
+from email import message
+from multiprocessing import context
 from django.shortcuts import redirect, render
 from django.http import HttpResponse
 from django.contrib import messages
@@ -5,6 +7,7 @@ from django.db.models import Q
 from django.contrib.auth.decorators import login_required
 from .models import Room, Topic
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from .forms import RoomForm
 
@@ -17,6 +20,8 @@ from .forms import RoomForm
 # ]
 
 def signinPage(request):
+
+  page = 'signin'
 
   if request.user.is_authenticated:
     return redirect('home')
@@ -37,12 +42,32 @@ def signinPage(request):
     else:
       messages.error(request, 'Username OR Password does not exist')
   
-  context = {}
+  context = {'page': page}
   return render(request, 'base/signin_signup.html', context)
 
 def logoutUser(request):
   logout(request)
   return redirect('home') 
+
+def signupPage(request):
+    form = UserCreationForm()
+    context = {'form': form}
+
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+          user = form.save(commit=False)
+          user.username = form.cleaned_data.get('username')
+          password = form.cleaned_data.get('password')
+          # user.set_password(password)
+          user.save()
+          login(request, user)
+          return redirect('home')
+        else:
+          messages.error(request, 'Invalid username or password')
+
+    return render(request, 'base/signin_signup.html', context)
+
 
 def home(request): 
   q =  request.GET.get('q') if request.GET.get('q') != None else ''
@@ -85,8 +110,8 @@ def updateRoom(request, pk):
   room = Room.objects.get(id=pk)
   form =RoomForm(instance=room)
 
-  if request.user != room.host:
-    return HttpResponse('You are not allowed here')
+  # if request.user != room.host:
+  #   return HttpResponse('You are not allowed here')
 
   if request.method == 'POST':
     form = RoomForm(request.POST, instance=room) 
