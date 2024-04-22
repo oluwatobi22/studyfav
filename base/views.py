@@ -1,5 +1,3 @@
-from email import message
-from multiprocessing import context
 from django.shortcuts import redirect, render
 from django.http import HttpResponse
 from django.contrib import messages
@@ -29,10 +27,6 @@ def signinPage(request):
   if request.method == 'POST':
     username = request.POST.get('username')
     password = request.POST.get('password')
-    try:
-      user = User.objects.get(username=username)
-    except:
-      messages.error(request, "User dosen't exist.")
 
     user = authenticate(request, username=username, password=password)
     
@@ -54,17 +48,18 @@ def signupPage(request):
     context = {'form': form}
 
     if request.method == 'POST':
-        form = UserCreationForm(request.POST)
-        if form.is_valid():
-          user = form.save(commit=False)
-          user.username = form.cleaned_data.get('username')
-          password = form.cleaned_data.get('password')
-          # user.set_password(password)
-          user.save()
-          login(request, user)
-          return redirect('home')
-        else:
-          messages.error(request, 'Invalid username or password')
+      form = UserCreationForm(request.POST)
+      if form.is_valid():
+        user = form.save(commit=False)
+        user.username = form.cleaned_data.get('username')
+        password = form.cleaned_data.get('password1')
+        user.set_password(password)
+        user.save()
+        login(request, user) 
+        return redirect('home')
+    else:
+        messages.error(request, 'Invalid signup attempt. Please check the fields below.')
+        context['form'] = form  
 
     return render(request, 'base/signin_signup.html', context)
 
