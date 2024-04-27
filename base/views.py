@@ -1,3 +1,4 @@
+from multiprocessing import context
 from pydoc_data import topics
 from django.shortcuts import redirect, render
 from django.http import HttpResponse
@@ -196,3 +197,9 @@ def updateUser(request):
 
   context = {'form': form}
   return render(request, 'base/update-user.html', context)
+
+def topicsPage(request):
+  topics = Topic.objects.filter()
+
+  context = {'topics': topics}
+  return render(request, 'base/topics.html', context)
