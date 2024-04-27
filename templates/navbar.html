@@ -31,7 +31,7 @@
           <div class="avatar avatar--medium active">
             <img src="https://randomuser.me/api/portraits/men/37.jpg" />
           </div>
-          <p>{{request.user}}<span>@{{request.user.username}}</span></p>
+          <p>{{ user.first_name }} {{ user.last_name }}<span>@{{request.user.username}}</span></p>
         </a>
         <button class="dropdown-button">
           <svg
