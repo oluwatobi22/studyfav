@@ -11,39 +11,6 @@ from .forms import RoomForm, UserForm, MyUserCreationForm
 
 # Create your views here.
 
-# rooms = [
-#   {'id':1, 'name': 'Lets Learn Python'},
-#   {'id':2, 'name': 'Lets Learn django'},
-#   {'id':3, 'name': 'Backend Developers'}
-# ]
-
-# def signinPage(request):
-
-#   page = 'signin'
-
-#   if request.user.is_authenticated:
-#     return redirect('home')
-
-#   if request.method == 'POST':
-#     email = request.POST.get('email')
-#     password = request.POST.get('password')
-
-#     try:
-#       user = User.objects.get(email=email)
-#     except:
-#       messages.error(request, 'Email address not found for user')
-    
-#     user = authenticate(request, email=email, password=password)
-
-#     if user is not None:
-#       login(request, user)
-#       return redirect('home')
-#     else:
-#       messages.error(request, 'Username OR Password does not exist')
-  
-#   context = {'page': page}
-#   return render(request, 'base/signin_signup.html', context)
-
 def signinPage(request):
     if request.user.is_authenticated:
         return redirect('home')
